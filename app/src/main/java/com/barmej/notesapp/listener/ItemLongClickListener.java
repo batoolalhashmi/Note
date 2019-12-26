@@ -1,7 +1,6 @@
 package com.barmej.notesapp.listener;
 
-public class ItemLongClickListener {
-    public void onLongClickItem(int position) {
+public interface ItemLongClickListener {
+     void onLongClickItem(int position);
 
-    }
 }

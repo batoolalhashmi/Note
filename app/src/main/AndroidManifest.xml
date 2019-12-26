@@ -11,12 +11,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".AddNewNoteActivity">
         </activity>
-        <activity android:name=".TextNoteEditorActivity">
-        </activity>
-        <activity android:name=".PhotoNoteEditorActivity">
-        </activity>
-        <activity android:name=".CheckBoxNoteEditorActivity">
-        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

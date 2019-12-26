@@ -9,10 +9,9 @@ public class Constants {
     public static final String NOTE_STRING = "NOTE_STRING_KEY";
     public static final String NOTE_COLOR = "NOTE_COLOR_KEY";
     public static final String EXTRA_ID = "EXTRA_ID_KEY";
-    public static final String MY_PREFERENCE = "my_pref";
-    public static final int TYPE_1 = 0;
-    public static final int TYPE_2 = 1;
-    public static final int TYPE_3 = 2;
+    public static final int TYPE_PHOTO_NOTE = 0;
+    public static final int TYPE_CHECK_NOTE = 1;
+    public static final int TYPE_NOTE = 2;
 
 
 }

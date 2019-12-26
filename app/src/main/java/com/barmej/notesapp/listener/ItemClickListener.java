@@ -1,7 +1,7 @@
 package com.barmej.notesapp.listener;
 
-public class ItemClickListener {
-    public void onClickItem(int position) {
+public interface ItemClickListener {
 
-    }
+    void onClickItem(int position);
+
 }

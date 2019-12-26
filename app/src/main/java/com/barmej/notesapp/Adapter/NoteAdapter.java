@@ -1,21 +1,26 @@
 package com.barmej.notesapp.Adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.barmej.notesapp.Constants;
 import com.barmej.notesapp.Data.CheckboxNote;
 import com.barmej.notesapp.Data.Note;
 import com.barmej.notesapp.Data.PhotoNote;
+import com.barmej.notesapp.MainActivity;
 import com.barmej.notesapp.R;
+import com.barmej.notesapp.listener.CheckBoxClickListener;
 import com.barmej.notesapp.listener.ItemClickListener;
 import com.barmej.notesapp.listener.ItemLongClickListener;
 
@@ -81,7 +86,7 @@ class CheckBoxNoteViewHolder extends RecyclerView.ViewHolder {
     TextView checkBoxTv;
     CheckBox checkBox;
 
-    public CheckBoxNoteViewHolder(View itemView, final ItemClickListener mItemClickListener, final ItemLongClickListener mItemLongClickListener) {
+    public CheckBoxNoteViewHolder(final View itemView, final ItemClickListener mItemClickListener, final ItemLongClickListener mItemLongClickListener, final CheckBoxClickListener mCheckBoxClickListener) {
         super(itemView);
         checkBoxTv = itemView.findViewById(R.id.check_box_note_view);
         checkBoxBackgroundColor = itemView.findViewById(R.id.check_box_note_card_view);
@@ -102,29 +107,40 @@ class CheckBoxNoteViewHolder extends RecyclerView.ViewHolder {
                 return true;
             }
         });
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton checkBox, boolean checked) {
+                int position = getAdapterPosition();
+                mCheckBoxClickListener.onChecked(position, checked);
+
+            }
+        });
+
     }
 }
 
 public class NoteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ItemClickListener mItemClickListener;
     private ItemLongClickListener mItemLongClickListener;
+    private CheckBoxClickListener mCheckBoxClickListener;
     private ArrayList<Note> mItems;
 
 
-    public NoteAdapter(ArrayList<Note> mItems, ItemClickListener mItemClickListener, ItemLongClickListener mItemLongClickListener) {
+    public NoteAdapter(ArrayList<Note> mItems, ItemClickListener mItemClickListener, ItemLongClickListener mItemLongClickListener, CheckBoxClickListener mCheckedBoxClickListener) {
         this.mItems = mItems;
         this.mItemClickListener = mItemClickListener;
         this.mItemLongClickListener = mItemLongClickListener;
+        this.mCheckBoxClickListener = mCheckedBoxClickListener;
     }
 
     public int getItemViewType(int position) {
         Note note = mItems.get(position);
         if (note instanceof PhotoNote) {
-            return (Constants.TYPE_1);
+            return (Constants.TYPE_PHOTO_NOTE);
         } else if (note instanceof CheckboxNote) {
-            return (Constants.TYPE_2);
+            return (Constants.TYPE_CHECK_NOTE);
         } else {
-            return (Constants.TYPE_3);
+            return (Constants.TYPE_NOTE);
         }
     }
 
@@ -132,12 +148,12 @@ public class NoteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
-            case (Constants.TYPE_1):
+            case (Constants.TYPE_PHOTO_NOTE):
                 View photoNoteViewHolder = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_note_photo, parent, false);
                 return new PhotoNoteViewHolder(photoNoteViewHolder, mItemClickListener, mItemLongClickListener);
-            case (Constants.TYPE_2):
+            case (Constants.TYPE_CHECK_NOTE):
                 View checkBoxNoteViewHolder = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_note_check, parent, false);
-                return new CheckBoxNoteViewHolder(checkBoxNoteViewHolder, mItemClickListener, mItemLongClickListener);
+                return new CheckBoxNoteViewHolder(checkBoxNoteViewHolder, mItemClickListener, mItemLongClickListener, mCheckBoxClickListener);
             default:
                 View textNoteViewHolder = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_note, parent, false);
                 return new TextNoteViewHolder(textNoteViewHolder, mItemClickListener, mItemLongClickListener);
@@ -147,18 +163,18 @@ public class NoteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
-            case (Constants.TYPE_1):
+            case (Constants.TYPE_PHOTO_NOTE):
                 PhotoNoteViewHolder photoNoteViewHolder = (PhotoNoteViewHolder) holder;
                 PhotoNote photoNotes = (PhotoNote) mItems.get(position);
                 photoNoteViewHolder.photoIv.setImageURI(photoNotes.getImageUri());
                 photoNoteViewHolder.photoTv.setText(photoNotes.getText());
                 photoNoteViewHolder.photoBackgroundColor.setBackgroundTintList(photoNotes.getBackground());
                 break;
-            case (Constants.TYPE_2):
+            case (Constants.TYPE_CHECK_NOTE):
                 CheckBoxNoteViewHolder checkBoxNoteViewHolder = (CheckBoxNoteViewHolder) holder;
                 CheckboxNote checkNotes = (CheckboxNote) mItems.get(position);
                 checkBoxNoteViewHolder.checkBoxTv.setText(checkNotes.getText());
-                checkBoxNoteViewHolder.checkBox.setChecked(checkNotes.getCheckBox());
+                checkBoxNoteViewHolder.checkBox.setChecked(checkNotes.getIsChecked());
                 checkBoxNoteViewHolder.checkBoxBackgroundColor.setBackgroundTintList(checkNotes.getBackground());
                 break;
             default:
@@ -169,6 +185,7 @@ public class NoteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
         }
     }
+
 
     @Override
     public int getItemCount() {

@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,16 +21,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+
 public class AddNewNoteActivity extends AppCompatActivity {
+    private static final int READ_PHOTO_PROM_GALLERY_PERMISSION = 130;
+    private static final int PICK_IMAGE = 120;
     ImageView mNewPhotoIv;
     EditText mPhotoNoteEt, mNoteEt, mCheckNoteEt;
     String mNewPhotoNoteEt, mNewNoteEt, mNewCheckNoteEt;
-    ColorStateList mBackgroundPhotoNoteColor, mBackgroundTextNoteColor, mBackgroundCheckBoxNoteColor;
+    ColorStateList mBackgroundPhotoNoteColor, mBackgroundTextNoteColor, mBackgroundCheckBoxNoteColor, background;
     CheckBox mCheckNoteCb;
-    Uri mSelectedPhotoUri;
+    Uri mSelectedPhotoUri, photoUri;
     CardView cardViewPhoto, cardViewNote, cardViewCheckNote;
-    private static final int READ_PHOTO_PROM_GALLERY_PERMISSION = 130;
-    private static final int PICK_IMAGE = 120;
+    boolean checkBox;
+    int id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +43,11 @@ public class AddNewNoteActivity extends AppCompatActivity {
         mNewPhotoIv = findViewById(R.id.photo_view);
         mPhotoNoteEt = findViewById(R.id.photo_note_edit_text);
         mNoteEt = findViewById(R.id.note_edit_text);
-        mCheckNoteEt = findViewById(R.id.checkNoteEditText);
+        mCheckNoteEt = findViewById(R.id.check_note_edit_text);
         mCheckNoteCb = findViewById(R.id.check_note_check_box);
         cardViewPhoto = findViewById(R.id.cardViewPhoto);
-        cardViewNote = findViewById(R.id.cardViewNote);
-        cardViewCheckNote = findViewById(R.id.cardViewCheckNote);
+        cardViewNote = findViewById(R.id.card_view_note);
+        cardViewCheckNote = findViewById(R.id.card_view_checkNote);
         Button selectPhotoNoteBt = findViewById(R.id.photo_note_button);
         Button selectCheckedNoteBt = findViewById(R.id.checked_note_button);
         Button selectTextNoteBt = findViewById(R.id.text_note_button);
@@ -50,6 +55,27 @@ public class AddNewNoteActivity extends AppCompatActivity {
         Button selectYellowBt = findViewById(R.id.yellow_button);
         Button selectRedBt = findViewById(R.id.red_button);
         Button submitBt = findViewById(R.id.button_submit);
+        Intent intent = getIntent();
+        checkBox = intent.getBooleanExtra(Constants.EXTRA_CHECK_BOX_VISIBLE, false);
+        photoUri = intent.getParcelableExtra(Constants.EXTRA_PHOTO_URI);
+        String text = intent.getStringExtra(Constants.NOTE_STRING);
+        background = intent.getParcelableExtra(Constants.NOTE_COLOR);
+        if (background != null) {
+            cardViewPhoto.setBackgroundTintList(background);
+            cardViewNote.setBackgroundTintList(background);
+            cardViewCheckNote.setBackgroundTintList(background);
+        } else {
+            cardViewPhoto.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.blue));
+            cardViewNote.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.blue));
+            cardViewCheckNote.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.blue));
+        }
+        mNoteEt.setText(text);
+        mPhotoNoteEt.setText(text);
+        mCheckNoteEt.setText(text);
+        mNewPhotoIv.setImageURI(photoUri);
+        mCheckNoteCb.setChecked(checkBox);
+        Log.i("AddActivity", String.valueOf(checkBox));
+        id = getIntent().getIntExtra(Constants.EXTRA_ID, 0);
         mNewPhotoIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,7 +156,6 @@ public class AddNewNoteActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE) {
             if (resultCode == RESULT_OK && data != null && data.getData() != null) {
                 setSelectedPhoto(data.getData());
-                getContentResolver().takePersistableUriPermission(data.getData(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
             } else {
                 Toast.makeText(this, R.string.failed_to_get_image, Toast.LENGTH_LONG).show();
             }
@@ -161,6 +186,7 @@ public class AddNewNoteActivity extends AppCompatActivity {
                 intent.putExtra(Constants.EXTRA_PHOTO_URI, mSelectedPhotoUri);
                 intent.putExtra(Constants.EXTRA_TEXT_NOTE, mNewPhotoNoteEt);
                 intent.putExtra(Constants.EXTRA_BACKGROUND_NOTE, mBackgroundPhotoNoteColor);
+                intent.putExtra(Constants.EXTRA_ID, id);
                 setResult(RESULT_OK, intent);
                 finish();
             } else {
@@ -173,6 +199,7 @@ public class AddNewNoteActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra(Constants.EXTRA_TEXT_NOTE, mNewNoteEt);
                 intent.putExtra(Constants.EXTRA_BACKGROUND_NOTE, mBackgroundTextNoteColor);
+                intent.putExtra(Constants.EXTRA_ID, id);
                 setResult(RESULT_OK, intent);
                 finish();
             } else {
@@ -186,6 +213,7 @@ public class AddNewNoteActivity extends AppCompatActivity {
                 intent.putExtra(Constants.EXTRA_CHECK_BOX_VISIBLE, mCheckNoteCb.isChecked());
                 intent.putExtra(Constants.EXTRA_TEXT_NOTE, mNewCheckNoteEt);
                 intent.putExtra(Constants.EXTRA_BACKGROUND_NOTE, mBackgroundCheckBoxNoteColor);
+                intent.putExtra(Constants.EXTRA_ID, id);
                 setResult(RESULT_OK, intent);
                 finish();
             } else {
@@ -200,7 +228,6 @@ public class AddNewNoteActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("image/*");
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), PICK_IMAGE);
     }
 

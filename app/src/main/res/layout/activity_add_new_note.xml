@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/view_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -16,20 +17,6 @@
         app:layout_constraintVertical_bias="0.9">
 
     </FrameLayout>
-
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:text="@string/add_new_item_description"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
         android:id="@+id/colorRadioGroup"
@@ -50,7 +37,8 @@
             android:layout_margin="4dp"
             android:layout_weight="1"
             android:button="@drawable/radio_button_blue"
-            android:checked="true" />
+            android:checked="true"
+            android:clickable="true" />
 
         <RadioButton
             android:id="@+id/yellow_button"
@@ -113,6 +101,20 @@
 
     </RadioGroup>
 
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:text="@string/add_new_item_description"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewPhoto"
         style="@style/Widget.MaterialComponents.CardView"
@@ -133,15 +135,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/photo_view"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_photo" />
-
             <EditText
                 android:id="@+id/photo_note_edit_text"
                 android:layout_width="match_parent"
@@ -155,12 +148,21 @@
                 android:hint="@string/add_note_text"
                 android:padding="16dp" />
 
+            <ImageView
+                android:id="@+id/photo_view"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_photo" />
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewNote"
+        android:id="@+id/card_view_note"
         style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -195,7 +197,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewCheckNote"
+        android:id="@+id/card_view_checkNote"
         style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -224,7 +226,7 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <EditText
-                android:id="@+id/checkNoteEditText"
+                android:id="@+id/check_note_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="8dp"

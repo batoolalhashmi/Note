@@ -3,14 +3,18 @@ package com.barmej.notesapp.Data;
 import android.content.res.ColorStateList;
 
 public class CheckboxNote extends Note {
-    private boolean checkBox;
+    private boolean isChecked;
 
-    public CheckboxNote(String text, ColorStateList background, boolean checkBox, NoteType noteType) {
+    public CheckboxNote(String text, ColorStateList background, boolean isChecked, NoteType noteType) {
         super(text, background, noteType);
-        this.checkBox = checkBox;
+        this.isChecked = isChecked;
     }
 
-    public boolean getCheckBox() {
-        return checkBox;
+    public boolean getIsChecked() {
+        return isChecked;
+    }
+
+    public void setIsChecked(boolean isChecked) {
+        this.isChecked = isChecked;
     }
 }
