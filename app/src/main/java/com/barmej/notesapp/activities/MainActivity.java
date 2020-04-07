@@ -17,10 +17,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.barmej.notesapp.Adapter.NoteAdapter;
-import com.barmej.notesapp.Data.CheckboxNote;
-import com.barmej.notesapp.Data.Note;
-import com.barmej.notesapp.Data.PhotoNote;
+import com.barmej.notesapp.adapter.NoteAdapter;
+import com.barmej.notesapp.data.CheckboxNote;
+import com.barmej.notesapp.data.Note;
+import com.barmej.notesapp.data.PhotoNote;
 import com.barmej.notesapp.listener.CheckBoxClickListener;
 import com.barmej.notesapp.listener.ItemClickListener;
 import com.barmej.notesapp.listener.ItemLongClickListener;
@@ -28,12 +28,11 @@ import com.barmej.notesapp.listener.ItemLongClickListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
-
 public class MainActivity extends AppCompatActivity {
     private static final int ADD_NOTE = 145;
     private static final int EDIT_NOTE = 155;
     private RecyclerView mRecycleView;
-    static ArrayList<Note> mItems;
+    private static ArrayList<Note> mItems;
     private NoteAdapter mAdapter;
 
 
@@ -41,10 +40,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mItems = new ArrayList<Note>();
 
-        if (mItems == null) {
-            mItems = new ArrayList<>();
-        }
+        //if (mItems == null) {
+        //mItems = new ArrayList<>();
+       // }
         mRecycleView = findViewById(R.id.recycler_view_notes);
         mAdapter = new NoteAdapter(mItems, new ItemClickListener() {
             public void onClickItem(int position) {
@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
                 changeChecked(position, checked);
             }
         });
-
         StaggeredGridLayoutManager mGridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecycleView.setLayoutManager(mGridLayoutManager);
@@ -72,31 +71,24 @@ public class MainActivity extends AppCompatActivity {
                 startAddNewNoteActivity();
             }
         });
-
-
     }
 
     private void startAddNewNoteActivity() {
         Intent intent = new Intent(this, AddNewNoteActivity.class);
         startActivityForResult(intent, ADD_NOTE);
-
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD_NOTE || requestCode == EDIT_NOTE) {
             if (resultCode == RESULT_OK && data != null) {
-
                 String noteString = data.getStringExtra(Constants.EXTRA_TEXT_NOTE);
                 ColorStateList noteColor = data.getParcelableExtra(Constants.EXTRA_BACKGROUND_NOTE);
                 Note note;
-
                 if (data.hasExtra(Constants.EXTRA_PHOTO_URI)) {
                     Uri photoUri = data.getParcelableExtra(Constants.EXTRA_PHOTO_URI);
                     note = new PhotoNote(noteString, noteColor, photoUri, Note.NoteType.PHOTO);
-
                 } else if (data.hasExtra(Constants.EXTRA_CHECK_BOX_VISIBLE)) {
                     boolean noteCheckBox = Objects.requireNonNull(data.getExtras()).getBoolean(Constants.EXTRA_CHECK_BOX_VISIBLE);
                     note = new CheckboxNote(noteString, noteColor, noteCheckBox, Note.NoteType.CHECKBOX);
@@ -112,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
                     mAdapter.notifyItemChanged(id);
                 }
             }
-
         }
     }
 

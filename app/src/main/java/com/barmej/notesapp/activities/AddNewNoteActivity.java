@@ -25,15 +25,15 @@ import android.widget.Toast;
 public class AddNewNoteActivity extends AppCompatActivity {
     private static final int READ_PHOTO_PROM_GALLERY_PERMISSION = 130;
     private static final int PICK_IMAGE = 120;
-    ImageView mNewPhotoIv;
-    EditText mPhotoNoteEt, mNoteEt, mCheckNoteEt;
-    String mNewPhotoNoteEt, mNewNoteEt, mNewCheckNoteEt;
-    ColorStateList mBackgroundPhotoNoteColor, mBackgroundTextNoteColor, mBackgroundCheckBoxNoteColor, background;
-    CheckBox mCheckNoteCb;
-    Uri mSelectedPhotoUri, photoUri;
-    CardView cardViewPhoto, cardViewNote, cardViewCheckNote;
-    boolean checkBox;
-    int id;
+    private ImageView mNewPhotoIv;
+    private EditText mPhotoNoteEt, mNoteEt, mCheckNoteEt;
+    private String mNewPhotoNoteEt, mNewNoteEt, mNewCheckNoteEt;
+    private ColorStateList mBackgroundPhotoNoteColor, mBackgroundTextNoteColor, mBackgroundCheckBoxNoteColor, background;
+    private CheckBox mCheckNoteCb;
+    private Uri mSelectedPhotoUri, photoUri;
+    private CardView cardViewPhoto, cardViewNote, cardViewCheckNote;
+    private boolean checkBox;
+    private int id;
 
 
     @Override
