@@ -7,16 +7,16 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.List;
-
-public class NoteConverter {
+/*
+public class NoteTypeConverter {
     @TypeConverter
-    public static List<Note> fromString(String value){
-        Type listType = new TypeToken<List<Note>>(){}.getType();
+    public static Note.NoteType fromString(String value){
+        Type listType = new TypeToken<Note.NoteType>(){}.getType();
         return new Gson().fromJson(value,listType);
     }
     @TypeConverter
-    public static String fromNote(List<Note>notes){
-        return new Gson().toJson(notes);
+    public static String fromNote(Note.NoteType noteType){
+        return new Gson().toJson(noteType);
     }
 }
+*/

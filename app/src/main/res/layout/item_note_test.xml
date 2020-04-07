@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-</LinearLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:backgroundTint="@{note.background}"
+        android:paddingTop="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@{note.isChecked}"
+                android:visibility="@{note.isChecked == true ? View.VISIBLE : View.GONE}" />
+
+            <ImageView
+                android:id="@+id/image_view_list_item_photo"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:maxHeight="150dp"
+                android:padding="4dp"
+                android:visibility="@{note.stringImageUri != null ? View.VISIBLE : View.GONE}"
+                app:imageUriString="@{note.stringImageUri}" />
+
+            <TextView
+                android:id="@+id/text_view_list_item_photo"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:maxHeight="150dp"
+                android:padding="4dp"
+                android:text="@{note.text}"
+                android:textColor="#161515"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <data>
+
+        <import type="com.barmej.notesapp.data.Note" />
+
+        <import type="android.view.View" />
+
+        <import type="com.barmej.notesapp.activities.MainActivity" />
+
+        <variable
+            name="note"
+            type="Note" />
+
+        <variable
+            name="activity"
+            type="MainActivity" />
+    </data>
+</layout>

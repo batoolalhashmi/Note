@@ -11,14 +11,11 @@ import androidx.databinding.BindingAdapter;
 import com.barmej.notesapp.R;
 
 public class BinddingAdapter {
-
-
     @BindingAdapter("imageUriString")
     public static void setImageUriString(ImageView imageView, String uriString) {
-        if(uriString == null) {
-            //imageView.setImageURI(Uri.parse("android.resource://" + R.drawable.ic_photo));
+        if (uriString == null) {
             imageView.setImageURI(Uri.parse(String.valueOf(R.drawable.ic_photo)));
-        }else {
+        } else {
             Uri uri = Uri.parse(uriString);
             imageView.setImageURI(uri);
         }
@@ -26,21 +23,10 @@ public class BinddingAdapter {
 
     @BindingAdapter("backgroundColor")
     public static void backgroundColor(CardView cardView, ColorStateList colorStateList) {
-        if(colorStateList == null) {
+        if (colorStateList == null) {
             cardView.setBackgroundTintList(ContextCompat.getColorStateList(cardView.getContext(), R.color.blue));
         } else {
             cardView.setBackgroundTintList(colorStateList);
         }
     }
-
-
-    /*@BindingAdapter("imageUri")
-    public static void setImageUri(ImageView imageView, String uriString) {
-        Uri uri = Uri.parse(uriString);
-        if (uri == null) {
-            imageView.setImageURI(Uri.parse(String.valueOf(R.drawable.ic_photo)));
-        } else {
-            imageView.setImageURI(uri);
-        }
-    }*/
 }

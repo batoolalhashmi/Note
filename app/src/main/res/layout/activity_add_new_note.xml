@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="com.barmej.notesapp.data.Note"/>
+        <import type="android.view.View"/>
+        <variable
+            name="note"
+            type="Note" />
+        <variable
+            name="activity"
+            type="com.barmej.notesapp.activities.AddNewNoteActivity" />
+        <variable
+            name="blueColor"
+            type="Integer" />
+        <variable
+            name="orangeColor"
+            type="Integer" />
+        <variable
+            name="redColor"
+            type="Integer" />
+    </data>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/view_background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    >
+   
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="0dp"
@@ -38,6 +61,7 @@
             android:layout_weight="1"
             android:button="@drawable/radio_button_blue"
             android:checked="true"
+            android:onClick="@{()->activity.changeBackground(blueColor)}"
             android:clickable="true" />
 
         <RadioButton
@@ -46,6 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:layout_weight="1"
+            android:onClick="@{()->activity.changeBackground(orangeColor)}"
             android:button="@drawable/radio_button_yellow"
             android:checked="false" />
 
@@ -54,6 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
+            android:onClick="@{()->activity.changeBackground(redColor)}"
             android:layout_weight="1"
             android:button="@drawable/radio_button_red" />
 
@@ -79,7 +105,8 @@
             android:layout_margin="4dp"
             android:layout_weight="1"
             android:button="@drawable/radio_button_note"
-            android:checked="false" />
+            android:checked="false"
+            android:onClick="textNoteVisible"/>
 
         <RadioButton
             android:id="@+id/checked_note_button"
@@ -88,7 +115,8 @@
             android:layout_margin="4dp"
             android:layout_weight="1"
             android:button="@drawable/radio_button_check_box"
-            android:checked="false" />
+            android:checked="false"
+            android:onClick="checkNoteVisible"/>
 
         <RadioButton
             android:id="@+id/photo_note_button"
@@ -97,7 +125,8 @@
             android:layout_margin="4dp"
             android:layout_weight="1"
             android:button="@drawable/radio_button_photo"
-            android:checked="true" />
+            android:checked="true"
+            android:onClick="photoNoteVisible"/>
 
     </RadioGroup>
 
@@ -122,7 +151,7 @@
         android:layout_height="0dp"
         android:layout_below="@+id/titleTextView"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/blue"
+        app:backgroundColor="@{note.background}"
         android:padding="8dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
@@ -145,6 +174,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@android:color/transparent"
                 android:gravity="top"
+                android:text="@{note.text}"
                 android:hint="@string/add_note_text"
                 android:padding="16dp" />
 
@@ -155,7 +185,9 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_photo" />
+                android:src="@{note.stringImageUri, default = @drawable/ic_photo}"
+                android:onClick="selectPhoto"
+                />
 
         </RelativeLayout>
 
@@ -168,7 +200,7 @@
         android:layout_height="0dp"
         android:layout_below="@+id/titleTextView"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/blue"
+        app:backgroundColor="@{note.background}"
         android:padding="8dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
@@ -191,6 +223,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@android:color/transparent"
                 android:gravity="top"
+                android:text="@{note.text}"
                 android:hint="@string/add_note_text" />
         </RelativeLayout>
 
@@ -203,7 +236,7 @@
         android:layout_height="0dp"
         android:layout_below="@+id/titleTextView"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/blue"
+        app:backgroundColor="@{note.background}"
         android:padding="8dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
@@ -223,7 +256,9 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                android:checked = "@{note.isChecked}"
+                />
 
             <EditText
                 android:id="@+id/check_note_edit_text"
@@ -234,6 +269,7 @@
                 android:layout_marginEnd="8dp"
                 android:background="@android:color/transparent"
                 android:gravity="top"
+                android:text="@{note.text}"
                 android:hint="@string/add_note_text"
                 app:layout_constraintBottom_toTopOf="@+id/check_note_check_box"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -266,6 +302,9 @@
         android:text="@string/add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:onClick="submit"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+

@@ -1,31 +1,35 @@
-package com.barmej.notesapp;
+package com.barmej.notesapp.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.barmej.notesapp.Constants;
+import com.barmej.notesapp.LocaleHelper;
+import com.barmej.notesapp.R;
 import com.barmej.notesapp.adapter.NoteAdapter;
-import com.barmej.notesapp.data.CheckboxNote;
 import com.barmej.notesapp.data.Note;
-import com.barmej.notesapp.data.PhotoNote;
 import com.barmej.notesapp.listener.CheckBoxClickListener;
 import com.barmej.notesapp.listener.ItemClickListener;
 import com.barmej.notesapp.listener.ItemLongClickListener;
+import com.barmej.notesapp.viewmodel.NoteViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,17 +38,24 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecycleView;
     private static ArrayList<Note> mItems;
     private NoteAdapter mAdapter;
-
+    private NoteViewModel noteViewModel;
+    private Note note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mItems = new ArrayList<Note>();
-
-        //if (mItems == null) {
-        //mItems = new ArrayList<>();
-       // }
+        noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
+        noteViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+                mItems.clear();
+                mItems.addAll(notes);
+                mAdapter.notifyDataSetChanged();
+                Toast.makeText(MainActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mItems = new ArrayList<>();
         mRecycleView = findViewById(R.id.recycler_view_notes);
         mAdapter = new NoteAdapter(mItems, new ItemClickListener() {
             public void onClickItem(int position) {
@@ -59,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
             public void onChecked(int position, boolean checked) {
                 changeChecked(position, checked);
             }
-        });
+        }
+        );
         StaggeredGridLayoutManager mGridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecycleView.setLayoutManager(mGridLayoutManager);
@@ -85,56 +97,35 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK && data != null) {
                 String noteString = data.getStringExtra(Constants.EXTRA_TEXT_NOTE);
                 ColorStateList noteColor = data.getParcelableExtra(Constants.EXTRA_BACKGROUND_NOTE);
-                Note note;
-                if (data.hasExtra(Constants.EXTRA_PHOTO_URI)) {
-                    Uri photoUri = data.getParcelableExtra(Constants.EXTRA_PHOTO_URI);
-                    note = new PhotoNote(noteString, noteColor, photoUri, Note.NoteType.PHOTO);
-                } else if (data.hasExtra(Constants.EXTRA_CHECK_BOX_VISIBLE)) {
-                    boolean noteCheckBox = Objects.requireNonNull(data.getExtras()).getBoolean(Constants.EXTRA_CHECK_BOX_VISIBLE);
-                    note = new CheckboxNote(noteString, noteColor, noteCheckBox, Note.NoteType.CHECKBOX);
-                } else {
-                    note = new Note(noteString, noteColor, Note.NoteType.TEXT);
-                }
+                String photoUri = data.getStringExtra(Constants.EXTRA_PHOTO_URI);
+                boolean noteCheckBox = Objects.requireNonNull(data.getExtras()).getBoolean(Constants.EXTRA_CHECK_BOX_VISIBLE);
+                int id = data.getIntExtra(Constants.EXTRA_ID, -1);
+                note = new Note(noteString, noteColor, photoUri, noteCheckBox);
                 if (requestCode == ADD_NOTE) {
-                    mItems.add(note);
-                    mAdapter.notifyItemInserted(mItems.size() - 1);
+                    noteViewModel.insert(note);
                 } else {
-                    int id = data.getIntExtra(Constants.EXTRA_ID, 1);
-                    mItems.set(id, note);
-                    mAdapter.notifyItemChanged(id);
+                    note.setId(id);
+                    noteViewModel.update(note);
+
                 }
             }
         }
     }
 
-    private void changeChecked(int position, boolean checked) {
-        CheckboxNote checkboxNote = (CheckboxNote) mItems.get(position);
+    public void changeChecked(int position, boolean checked) {
+        note = mItems.get(position);
         if (checked) {
-            checkboxNote.setIsChecked(true);
+            note.setIsChecked(true);
         } else {
-            checkboxNote.setIsChecked(false);
+            note.setIsChecked(false);
         }
     }
 
     private void editNote(int position) {
-        Note note = mItems.get(position);
-        Note.NoteType noteType = note.getNoteType();
-        Intent intent;
-        intent = new Intent(this, AddNewNoteActivity.class);
-        intent.putExtra(Constants.EXTRA_ID, position);
-        intent.putExtra(Constants.NOTE_STRING, note.getText());
-        intent.putExtra(Constants.NOTE_COLOR, note.getBackground());
-        switch (noteType) {
-            case PHOTO:
-                PhotoNote photoNote = (PhotoNote) mItems.get(position);
-                intent.putExtra(Constants.EXTRA_PHOTO_URI, photoNote.getImageUri());
-                break;
-            case CHECKBOX:
-                CheckboxNote checkboxNote = (CheckboxNote) mItems.get(position);
-                intent.putExtra(Constants.EXTRA_CHECK_BOX_VISIBLE, checkboxNote.getIsChecked());
-                Log.i("mainActivity", String.valueOf(checkboxNote.getIsChecked()));
-                break;
-        }
+        note = mItems.get(position);
+        Intent intent = new Intent(this, AddNewNoteActivity.class);
+        intent.putExtra(Constants.EXTRA_ID, note.getId());
+        intent.putExtra(Constants.EXTRA_NOTE, note);
         startActivityForResult(intent, EDIT_NOTE);
     }
 
@@ -143,8 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage(R.string.delete_confirmation)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mItems.remove(position);
-                        mAdapter.notifyItemRemoved(position);
+                        noteViewModel.delete(mItems.get(position));
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -170,6 +160,21 @@ public class MainActivity extends AppCompatActivity {
             showLanguageDialog();
             return true;
         } else {
+            AlertDialog alertDialog = new AlertDialog.Builder(this)
+                    .setMessage(R.string.delete_confirmation)
+                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            noteViewModel.deleteAllNotes();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .create();
+            alertDialog.show();
             return super.onOptionsItemSelected(item);
         }
     }

@@ -1,34 +1,32 @@
-package com.barmej.notesapp.viewModel;
-
+package com.barmej.notesapp.viewmodel;
 import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import com.barmej.notesapp.data.Note;
-
-import java.util.ArrayList;
+import com.barmej.notesapp.data.NoteRepository;
 import java.util.List;
-
-public class MainViewModel extends AndroidViewModel {
-
-    private String TAG = MainViewModel.class.getSimpleName();
-
-    private MutableLiveData<ArrayList<Note>> mItems;
-
-    LiveData<ArrayList<Note>> getItems() {
-        if (mItems == null) {
-            mItems = new MutableLiveData<>();
-           // loadItems();
-        }
-        return mItems;
-    }
-
-    public MainViewModel(@NonNull Application application) {
+public class NoteViewModel extends AndroidViewModel {
+    private NoteRepository repository;
+    private LiveData<List<Note>> allNotes;
+    public NoteViewModel(@NonNull Application application) {
         super(application);
-
-
+        repository = new NoteRepository(application);
+        allNotes = repository.getAllNotes();
+    }
+    public void insert(Note note){
+        repository.insert(note);
+    }
+    public void update(Note note){
+        repository.update(note);
+    }
+    public void delete(Note note){
+        repository.delete(note);
+    }
+    public void deleteAllNotes(){
+        repository.deleteAllNotes();
+    }
+    public LiveData<List<Note>> getAllNotes(){
+        return allNotes;
     }
 }

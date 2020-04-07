@@ -17,4 +17,5 @@
         <item>English</item>
     </string-array>
     <string name="save">save</string>
+    <string name="delete_all_notes">Delete all notes</string>
 </resources>

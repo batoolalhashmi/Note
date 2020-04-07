@@ -6,4 +6,8 @@
         android:icon="@android:drawable/ic_menu_manage"
         android:title="@string/change_lang_text"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/delete_all_notes"
+        android:title="@string/delete_all_notes"
+        app:showAsAction="never"/>
 </menu>

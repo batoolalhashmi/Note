@@ -6,12 +6,9 @@ public class Constants {
     public static final String EXTRA_BACKGROUND_NOTE = "EXTRA_BACKGROUND_KEY";
     public static final String EXTRA_TEXT_NOTE = "EXTRA_TEXT_NOTE_KEY";
     public static final String EXTRA_CHECK_BOX_VISIBLE = "EXTRA_CHECK_BOX_VISIBLE_KEY";
-    public static final String NOTE_STRING = "NOTE_STRING_KEY";
-    public static final String NOTE_COLOR = "NOTE_COLOR_KEY";
     public static final String EXTRA_ID = "EXTRA_ID_KEY";
-    public static final int TYPE_PHOTO_NOTE = 0;
-    public static final int TYPE_CHECK_NOTE = 1;
-    public static final int TYPE_NOTE = 2;
+    public static final String EXTRA_NOTE = "EXTRA_NOTE";
+
 
 
 }
