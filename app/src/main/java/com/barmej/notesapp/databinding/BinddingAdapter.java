@@ -1,6 +1,5 @@
 package com.barmej.notesapp.databinding;
 
-import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.widget.ImageView;
 
@@ -22,11 +21,13 @@ public class BinddingAdapter {
     }
 
     @BindingAdapter("backgroundColor")
-    public static void backgroundColor(CardView cardView, ColorStateList colorStateList) {
-        if (colorStateList == null) {
-            cardView.setBackgroundTintList(ContextCompat.getColorStateList(cardView.getContext(), R.color.blue));
+    public static void backgroundColor(CardView cardView, int background) {
+        if (background == 0) {
+            int color = R.color.blue;
+            cardView.setBackgroundColor(ContextCompat.getColor(cardView.getContext(), color));
         } else {
-            cardView.setBackgroundTintList(colorStateList);
+            cardView.setBackgroundColor(background);
         }
     }
+
 }

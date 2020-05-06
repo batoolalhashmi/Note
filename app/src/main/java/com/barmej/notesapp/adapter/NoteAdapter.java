@@ -9,9 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.barmej.notesapp.Constants;
 import com.barmej.notesapp.data.Note;
 import com.barmej.notesapp.R;
-import com.barmej.notesapp.databinding.ItemNoteTestBinding;
+import com.barmej.notesapp.databinding.ItemNoteBinding;
 import com.barmej.notesapp.listener.CheckBoxClickListener;
 import com.barmej.notesapp.listener.ItemClickListener;
 import com.barmej.notesapp.listener.ItemLongClickListener;
@@ -19,11 +20,15 @@ import com.barmej.notesapp.listener.ItemLongClickListener;
 import java.util.ArrayList;
 
 class NoteViewHolder extends RecyclerView.ViewHolder {
-    final ItemNoteTestBinding itemNoteTestBinding;
 
-    public NoteViewHolder(ItemNoteTestBinding itemNoteTestBinding, final ItemClickListener mItemClickListener, final ItemLongClickListener mItemLongClickListener, final CheckBoxClickListener mCheckBoxClickListener) {
-        super(itemNoteTestBinding.getRoot());
-        this.itemNoteTestBinding = itemNoteTestBinding;
+    private final ItemNoteBinding itemNoteBinding;
+
+    public NoteViewHolder(ItemNoteBinding itemNoteBinding, final ItemClickListener mItemClickListener, final ItemLongClickListener mItemLongClickListener, final CheckBoxClickListener mCheckBoxClickListener) {
+        super(itemNoteBinding.getRoot());
+        this.itemNoteBinding = itemNoteBinding;
+        itemNoteBinding.setCheckBoxNote(Constants.CHECK_BOX_NOTE);
+        itemNoteBinding.setPhotoNote(Constants.PHOTO_NOTE);
+        itemNoteBinding.setTextNote(Constants.TEXT_NOTE);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,7 +44,7 @@ class NoteViewHolder extends RecyclerView.ViewHolder {
                 return true;
             }
         });
-        itemNoteTestBinding.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        itemNoteBinding.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton checkBox, boolean checked) {
                 int position = getAdapterPosition();
@@ -49,7 +54,7 @@ class NoteViewHolder extends RecyclerView.ViewHolder {
     }
 
     void bind(Note note) {
-        itemNoteTestBinding.setNote(note);
+        itemNoteBinding.setNote(note);
     }
 }
 
@@ -69,11 +74,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> {
     @NonNull
     @Override
     public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemNoteTestBinding itemNoteTestBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_note_test, parent, false);
-        return new NoteViewHolder(itemNoteTestBinding, mItemClickListener, mItemLongClickListener, mCheckBoxClickListener);
+        ItemNoteBinding itemNoteBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_note, parent, false);
+        return new NoteViewHolder(itemNoteBinding, mItemClickListener, mItemLongClickListener, mCheckBoxClickListener);
     }
 
-    @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
         Note notes = mItems.get(position);
         holder.bind(notes);

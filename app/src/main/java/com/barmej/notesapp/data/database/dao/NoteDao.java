@@ -29,6 +29,4 @@ public interface NoteDao {
 
     @Query("SELECT * FROM note_table")
     LiveData<List<Note>> getAllNotes();
-
-
 }

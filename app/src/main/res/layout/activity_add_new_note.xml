@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
         <import type="com.barmej.notesapp.data.Note"/>
         <import type="android.view.View"/>
@@ -14,297 +15,235 @@
             name="blueColor"
             type="Integer" />
         <variable
-            name="orangeColor"
+            name="yellowColor"
             type="Integer" />
         <variable
             name="redColor"
             type="Integer" />
+        <variable
+            name="textNote"
+            type="Integer" />
+        <variable
+            name="photoNote"
+            type="Integer" />
+        <variable
+            name="checkBoxNote"
+            type="Integer" />
     </data>
 
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/view_background"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-   
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:background="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="@+id/typeRadioGroup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/view_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:background="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="@+id/typeRadioGroup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.9">
 
-    <RadioGroup
-        android:id="@+id/colorRadioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/typeRadioGroup"
-        app:layout_constraintTop_toBottomOf="@+id/titleTextView">
+        </FrameLayout>
 
-        <RadioButton
-            android:id="@+id/blue_button"
+        <RadioGroup
+            android:id="@+id/colorRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:button="@drawable/radio_button_blue"
-            android:checked="true"
-            android:onClick="@{()->activity.changeBackground(blueColor)}"
-            android:clickable="true" />
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/typeRadioGroup"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView">
 
-        <RadioButton
-            android:id="@+id/yellow_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:onClick="@{()->activity.changeBackground(orangeColor)}"
-            android:button="@drawable/radio_button_yellow"
-            android:checked="false" />
-
-        <RadioButton
-            android:id="@+id/red_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:onClick="@{()->activity.changeBackground(redColor)}"
-            android:layout_weight="1"
-            android:button="@drawable/radio_button_red" />
-
-    </RadioGroup>
-
-    <RadioGroup
-        android:id="@+id/typeRadioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toStartOf="@+id/colorRadioGroup"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTextView">
-
-        <RadioButton
-            android:id="@+id/text_note_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:button="@drawable/radio_button_note"
-            android:checked="false"
-            android:onClick="textNoteVisible"/>
-
-        <RadioButton
-            android:id="@+id/checked_note_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:button="@drawable/radio_button_check_box"
-            android:checked="false"
-            android:onClick="checkNoteVisible"/>
-
-        <RadioButton
-            android:id="@+id/photo_note_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:button="@drawable/radio_button_photo"
-            android:checked="true"
-            android:onClick="photoNoteVisible"/>
-
-    </RadioGroup>
-
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:text="@string/add_new_item_description"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewPhoto"
-        style="@style/Widget.MaterialComponents.CardView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_below="@+id/titleTextView"
-        android:layout_marginBottom="8dp"
-        app:backgroundColor="@{note.background}"
-        android:padding="8dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout">
-
-        <RelativeLayout
-            android:id="@+id/relativeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/photo_note_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/photo_view"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:background="@android:color/transparent"
-                android:gravity="top"
-                android:text="@{note.text}"
-                android:hint="@string/add_note_text"
-                android:padding="16dp" />
-
-            <ImageView
-                android:id="@+id/photo_view"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:scaleType="fitCenter"
-                android:src="@{note.stringImageUri, default = @drawable/ic_photo}"
-                android:onClick="selectPhoto"
-                />
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view_note"
-        style="@style/Widget.MaterialComponents.CardView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_below="@+id/titleTextView"
-        android:layout_marginBottom="8dp"
-        app:backgroundColor="@{note.background}"
-        android:padding="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
-
-            <EditText
-                android:id="@+id/note_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:background="@android:color/transparent"
-                android:gravity="top"
-                android:text="@{note.text}"
-                android:hint="@string/add_note_text" />
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view_checkNote"
-        style="@style/Widget.MaterialComponents.CardView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_below="@+id/titleTextView"
-        android:layout_marginBottom="8dp"
-        app:backgroundColor="@{note.background}"
-        android:padding="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp">
-
-            <CheckBox
-                android:id="@+id/check_note_check_box"
+            <RadioButton
+                android:id="@+id/blue_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:checked = "@{note.isChecked}"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:button="@drawable/radio_button_blue"
+                android:checked="@{note.background == blueColor ? true : false}"
+                android:onClick="@{()->activity.changeBackground(blueColor)}"
+                android:clickable="true" />
+
+            <RadioButton
+                android:id="@+id/yellow_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:checked="@{note.background == yellowColor ? true : false}"
+                android:onClick="@{()->activity.changeBackground(yellowColor)}"
+                android:button="@drawable/radio_button_yellow"
                 />
 
-            <EditText
-                android:id="@+id/check_note_edit_text"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@android:color/transparent"
-                android:gravity="top"
-                android:text="@{note.text}"
-                android:hint="@string/add_note_text"
-                app:layout_constraintBottom_toTopOf="@+id/check_note_check_box"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <RadioButton
+                android:id="@+id/red_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:checked="@{note.background == redColor ? true : false}"
+                android:onClick="@{()->activity.changeBackground(redColor)}"
+                android:layout_weight="1"
+                android:button="@drawable/radio_button_red" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </RadioGroup>
 
-    </androidx.cardview.widget.CardView>
+        <RadioGroup
+            android:id="@+id/typeRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/colorRadioGroup"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView">
+
+            <RadioButton
+                android:id="@+id/text_note_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:button="@drawable/radio_button_note"
+                android:checked="@{note.type == textNote ? true : false}"
+                android:onClick="@{()->activity.setNoteType(textNote)}"/>
+
+            <RadioButton
+                android:id="@+id/checked_note_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:button="@drawable/radio_button_check_box"
+                android:checked="@{note.type == checkBoxNote ? true : false}"
+                android:onClick="@{()->activity.setNoteType(checkBoxNote)}"/>
+
+            <RadioButton
+                android:id="@+id/photo_note_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:button="@drawable/radio_button_photo"
+                android:checked="@{note.type == photoNote ? true : false}"
+                android:onClick="@{()->activity.setNoteType(photoNote)}"/>
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="@string/add_new_item_description"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_below="@+id/titleTextView"
+            android:layout_marginBottom="8dp"
+            android:padding="8dp"
+            android:visibility= "visible"
+            app:backgroundColor="@{note.background}"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/note_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:onClick="selectPhoto"
+                    android:scaleType="fitCenter"
+                    android:src="@{note.stringImageUri, default = @drawable/ic_photo}"
+                    android:visibility="@{note.type == photoNote ? View.VISIBLE : View.GONE}" />
+
+                <EditText
+                    android:id="@+id/note_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@android:color/transparent"
+                    android:gravity="top"
+                    android:hint="@string/add_note_text"
+                    android:padding="16dp"
+                    android:text="@{note.text}" />
 
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+            </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+                <CheckBox
+                    android:id="@+id/note_check_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:checked="@{note.isChecked}"
+                    android:visibility="@{note.type == checkBoxNote ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_submit"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:padding="16dp"
-        android:text="@string/add"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:onClick="submit"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.9" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_submit"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:padding="16dp"
+            android:text="@string/add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="submit"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
-

@@ -1,26 +1,34 @@
 package com.barmej.notesapp.data;
-import android.content.res.ColorStateList;
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
 @Entity(tableName = "note_table")
 public class Note implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    @NonNull
     private String text;
-    private ColorStateList background;
+    private int background;
     private String stringImageUri;
     private boolean isChecked;
+    private int type;
+
+    public Note() {
+
+    }
+
     protected Note(Parcel in) {
         id = in.readInt();
         text = in.readString();
-        background = in.readParcelable(ColorStateList.class.getClassLoader());
+        background = in.readInt();
         stringImageUri = in.readString();
         isChecked = in.readByte() != 0;
+        type = in.readInt();
     }
+
     public static final Creator<Note> CREATOR = new Creator<Note>() {
         @Override
         public Note createFromParcel(Parcel in) {
@@ -33,19 +41,36 @@ public class Note implements Parcelable {
         }
     };
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(text);
+        parcel.writeInt(background);
+        parcel.writeString(stringImageUri);
+        parcel.writeByte((byte) (isChecked ? 1 : 0));
+        parcel.writeInt(type);
+
+    }
+
+    public Note(String text, int background, String stringImageUri, boolean isChecked, int type) {
+        this.text = text;
+        this.background = background;
+        this.stringImageUri = stringImageUri;
+        this.isChecked = isChecked;
+        this.type = type;
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Note(String text, ColorStateList background, String stringImageUri, boolean isChecked) {
-        this.text = text;
-        this.background = background;
-        this.stringImageUri = stringImageUri;
-        this.isChecked = isChecked;
     }
 
     public String getText() {
@@ -56,11 +81,11 @@ public class Note implements Parcelable {
         this.text = text;
     }
 
-    public ColorStateList getBackground() {
+    public int getBackground() {
         return background;
     }
 
-    public void setBackground(ColorStateList background) {
+    public void setBackground(int background) {
         this.background = background;
     }
 
@@ -72,25 +97,19 @@ public class Note implements Parcelable {
         this.stringImageUri = stringImageUri;
     }
 
-    public boolean getIsChecked() {
+    public boolean isChecked() {
         return isChecked;
     }
 
-    public void setIsChecked(boolean isChecked) {
-        this.isChecked = isChecked;
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public int getType() {
+        return type;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
-        parcel.writeString(text);
-        parcel.writeParcelable(background, i);
-        parcel.writeString(stringImageUri);
-        parcel.writeByte((byte) (isChecked ? 1 : 0));
+    public void setType(int type) {
+        this.type = type;
     }
 }

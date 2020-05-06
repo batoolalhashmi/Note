@@ -2,12 +2,32 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <import type="com.barmej.notesapp.data.Note" />
+
+        <import type="android.view.View" />
+        <variable
+            name="note"
+            type="Note" />
+        <variable
+            name="textNote"
+            type="Integer" />
+        <variable
+            name="photoNote"
+            type="Integer" />
+        <variable
+            name="checkBoxNote"
+            type="Integer" />
+
+    </data>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view_photo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:backgroundColor="@{note.background}"
         android:layout_margin="8dp"
-        android:backgroundTint="@{note.background}"
         android:paddingTop="16dp">
 
         <LinearLayout
@@ -15,20 +35,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/check_box"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="@{note.isChecked}"
-                android:visibility="@{note.isChecked == true ? View.VISIBLE : View.GONE}" />
-
             <ImageView
                 android:id="@+id/image_view_list_item_photo"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:maxHeight="150dp"
                 android:padding="4dp"
-                android:visibility="@{note.stringImageUri != null ? View.VISIBLE : View.GONE}"
+                android:visibility="@{note.type == photoNote ? View.VISIBLE : View.GONE}"
                 app:imageUriString="@{note.stringImageUri}" />
 
             <TextView
@@ -40,23 +53,12 @@
                 android:text="@{note.text}"
                 android:textColor="#161515"
                 android:textSize="12sp" />
+            <CheckBox
+                android:id="@+id/check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@{note.isChecked}"
+                android:visibility="@{note.type == checkBoxNote ? View.VISIBLE : View.GONE}" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-    <data>
-
-        <import type="com.barmej.notesapp.data.Note" />
-
-        <import type="android.view.View" />
-
-        <import type="com.barmej.notesapp.activities.MainActivity" />
-
-        <variable
-            name="note"
-            type="Note" />
-
-        <variable
-            name="activity"
-            type="MainActivity" />
-    </data>
 </layout>

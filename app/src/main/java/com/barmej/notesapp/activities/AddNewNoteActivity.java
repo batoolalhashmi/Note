@@ -4,13 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -20,26 +19,39 @@ import com.barmej.notesapp.Constants;
 import com.barmej.notesapp.R;
 import com.barmej.notesapp.data.Note;
 import com.barmej.notesapp.databinding.ActivityAddNewNoteBinding;
+import com.barmej.notesapp.viewmodel.NoteViewModel;
+
 
 public class AddNewNoteActivity extends AppCompatActivity {
     private static final int READ_PHOTO_PROM_GALLERY_PERMISSION = 130;
     private static final int PICK_IMAGE = 120;
-    private String mNewPhotoNoteEt, mNewNoteEt, mNewCheckNoteEt;
-    private ColorStateList mBackgroundPhotoNoteColor, mBackgroundTextNoteColor, mBackgroundCheckBoxNoteColor;
-    private Uri mSelectedPhotoUri;
+    private String mTextNoteEt;
     private int id;
     private ActivityAddNewNoteBinding binding;
+    private NoteViewModel noteViewModel;
+    private Note note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_new_note);
         binding.setActivity(this);
-        binding.setBlueColor(R.color.blue);
-        binding.setOrangeColor(R.color.yellow);
-        binding.setRedColor(R.color.red);
-        binding.setNote((Note) getIntent().getParcelableExtra(Constants.EXTRA_NOTE));
+        binding.setBlueColor(getColor(R.color.blue));
+        binding.setYellowColor(getColor(R.color.yellow));
+        binding.setRedColor(getColor(R.color.red));
+        binding.setTextNote(Constants.TEXT_NOTE);
+        binding.setPhotoNote(Constants.PHOTO_NOTE);
+        binding.setCheckBoxNote(Constants.CHECK_BOX_NOTE);
         id = getIntent().getIntExtra(Constants.EXTRA_ID, 0);
+        note = getIntent().getParcelableExtra(Constants.EXTRA_NOTE);
+        if (note == null) {
+            note = new Note();
+            note.setBackground(getColor(R.color.blue));
+            note.setType(Constants.PHOTO_NOTE);
+        }
+        binding.setNote(note);
+        noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
+
     }
 
     @Override
@@ -77,48 +89,48 @@ public class AddNewNoteActivity extends AppCompatActivity {
     }
 
     private void setSelectedPhoto(Uri data) {
-        binding.photoView.setImageURI(data);
-        mSelectedPhotoUri = data;
+        binding.noteImageView.setImageURI(data);
+        note.setStringImageUri(data.toString());
     }
 
     public void submit(View view) {
-        if (binding.cardViewPhoto.getVisibility() == View.VISIBLE) {
-            if (mSelectedPhotoUri != null && !binding.photoNoteEditText.getText().toString().matches("")) {
-                mNewPhotoNoteEt = binding.photoNoteEditText.getText().toString();
-                mBackgroundPhotoNoteColor = binding.cardViewPhoto.getBackgroundTintList();
-                Intent intent = new Intent();
-                intent.putExtra(Constants.EXTRA_PHOTO_URI, mSelectedPhotoUri.toString());
-                intent.putExtra(Constants.EXTRA_TEXT_NOTE, mNewPhotoNoteEt);
-                intent.putExtra(Constants.EXTRA_BACKGROUND_NOTE, mBackgroundPhotoNoteColor);
-                intent.putExtra(Constants.EXTRA_ID, id);
-                setResult(RESULT_OK, intent);
+        mTextNoteEt = binding.noteEditText.getText().toString();
+        if (note.getType() == Constants.PHOTO_NOTE) {
+            if (binding.noteImageView != null && !mTextNoteEt.matches("")) {
+                if (id == 0) {
+                    noteViewModel.insert(new Note(mTextNoteEt, note.getBackground(), note.getStringImageUri(), note.isChecked(), Constants.PHOTO_NOTE));
+                } else {
+                    note.setText(mTextNoteEt);
+                    note.setType(Constants.PHOTO_NOTE);
+                    noteViewModel.update(note);
+                }
                 finish();
             } else {
                 Toast.makeText(this, R.string.add_note, Toast.LENGTH_LONG).show();
             }
-        } else if (binding.cardViewNote.getVisibility() == View.VISIBLE) {
-            if (!binding.noteEditText.getText().toString().matches("")) {
-                mNewNoteEt = binding.noteEditText.getText().toString();
-                mBackgroundTextNoteColor = binding.cardViewNote.getBackgroundTintList();
-                Intent intent = new Intent();
-                intent.putExtra(Constants.EXTRA_TEXT_NOTE, mNewNoteEt);
-                intent.putExtra(Constants.EXTRA_BACKGROUND_NOTE, mBackgroundTextNoteColor);
-                intent.putExtra(Constants.EXTRA_ID, id);
-                setResult(RESULT_OK, intent);
+        } else if (note.getType() == Constants.TEXT_NOTE) {
+            if (!mTextNoteEt.matches("")) {
+                if (id == 0) {
+                    noteViewModel.insert(new Note(mTextNoteEt, note.getBackground(), note.getStringImageUri(), note.isChecked(), Constants.TEXT_NOTE));
+                } else {
+                    note.setText(mTextNoteEt);
+                    note.setType(Constants.TEXT_NOTE);
+                    noteViewModel.update(note);
+                }
                 finish();
             } else {
                 Toast.makeText(this, R.string.add_note, Toast.LENGTH_LONG).show();
             }
-        } else if (binding.cardViewCheckNote.getVisibility() == View.VISIBLE) {
-            if (!binding.checkNoteEditText.getText().toString().matches("")) {
-                mNewCheckNoteEt = binding.checkNoteEditText.getText().toString();
-                mBackgroundCheckBoxNoteColor = binding.cardViewCheckNote.getBackgroundTintList();
-                Intent intent = new Intent();
-                intent.putExtra(Constants.EXTRA_CHECK_BOX_VISIBLE, binding.checkNoteCheckBox.isChecked());
-                intent.putExtra(Constants.EXTRA_TEXT_NOTE, mNewCheckNoteEt);
-                intent.putExtra(Constants.EXTRA_BACKGROUND_NOTE, mBackgroundCheckBoxNoteColor);
-                intent.putExtra(Constants.EXTRA_ID, id);
-                setResult(RESULT_OK, intent);
+        } else if (note.getType() == Constants.CHECK_BOX_NOTE) {
+            if (!mTextNoteEt.matches("")) {
+                if (id == 0) {
+                    noteViewModel.insert(new Note(mTextNoteEt, note.getBackground(), note.getStringImageUri(), binding.noteCheckBox.isChecked(), Constants.CHECK_BOX_NOTE));
+                } else {
+                    note.setText(mTextNoteEt);
+                    note.setType(Constants.CHECK_BOX_NOTE);
+                    note.setChecked(binding.noteCheckBox.isChecked());
+                    noteViewModel.update(note);
+                }
                 finish();
             } else {
                 Toast.makeText(this, R.string.add_note, Toast.LENGTH_LONG).show();
@@ -136,27 +148,12 @@ public class AddNewNoteActivity extends AppCompatActivity {
     }
 
     public void changeBackground(int resId) {
-        binding.cardViewPhoto.setBackgroundTintList(ContextCompat.getColorStateList(this, resId));
-        binding.cardViewNote.setBackgroundTintList(ContextCompat.getColorStateList(this, resId));
-        binding.cardViewCheckNote.setBackgroundTintList(ContextCompat.getColorStateList(this, resId));
+        note.setBackground(resId);
+        binding.setNote(note);
     }
 
-    public void checkNoteVisible(View view) {
-        binding.cardViewPhoto.setVisibility(View.GONE);
-        binding.cardViewCheckNote.setVisibility(View.VISIBLE);
-        binding.cardViewNote.setVisibility(View.GONE);
-    }
-
-    public void textNoteVisible(View view) {
-        binding.cardViewNote.setVisibility(View.VISIBLE);
-        binding.cardViewPhoto.setVisibility(View.GONE);
-        binding.cardViewCheckNote.setVisibility(View.GONE);
-
-    }
-
-    public void photoNoteVisible(View view) {
-        binding.cardViewPhoto.setVisibility(View.VISIBLE);
-        binding.cardViewCheckNote.setVisibility(View.GONE);
-        binding.cardViewNote.setVisibility(View.GONE);
+    public void setNoteType(int type) {
+        note.setType(type);
+        binding.setNote(note);
     }
 }
