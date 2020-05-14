@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
                 mItems.clear();
                 mItems.addAll(notes);
                 mAdapter.notifyDataSetChanged();
-
             }
         });
         mItems = new ArrayList<>();

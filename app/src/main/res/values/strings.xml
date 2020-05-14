@@ -18,5 +18,6 @@
         <item>العربية</item>
         <item>English</item>
     </string-array>
+    <string name="update">تحديث</string>
 
 </resources>

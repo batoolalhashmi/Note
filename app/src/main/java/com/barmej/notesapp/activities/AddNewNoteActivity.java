@@ -50,6 +50,7 @@ public class AddNewNoteActivity extends AppCompatActivity {
             note.setType(Constants.PHOTO_NOTE);
         }
         binding.setNote(note);
+        changeSubmitButtonName();
         noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
 
     }
@@ -155,5 +156,12 @@ public class AddNewNoteActivity extends AppCompatActivity {
     public void setNoteType(int type) {
         note.setType(type);
         binding.setNote(note);
+    }
+    public void changeSubmitButtonName(){
+        if(id == 0){
+            binding.buttonSubmit.setText(R.string.add);
+        }else{
+            binding.buttonSubmit.setText(R.string.update);
+        }
     }
 }

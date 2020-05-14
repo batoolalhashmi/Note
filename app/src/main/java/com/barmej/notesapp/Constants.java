@@ -6,6 +6,4 @@ public class Constants {
     public static final int TEXT_NOTE = 0;
     public static final int PHOTO_NOTE = 1;
     public static final int CHECK_BOX_NOTE = 2;
-
-
 }

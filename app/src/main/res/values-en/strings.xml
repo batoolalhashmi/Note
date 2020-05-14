@@ -18,4 +18,5 @@
     </string-array>
     <string name="save">save</string>
     <string name="delete_all_notes">Delete all notes</string>
+    <string name="update">update</string>
 </resources>
